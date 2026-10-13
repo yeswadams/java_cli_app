@@ -1,5 +1,5 @@
 package com.csv.analyzer.domain;
 
-public enum TransationType {
+public enum TransactionType {
     INCOME, EXPENSE
 }
