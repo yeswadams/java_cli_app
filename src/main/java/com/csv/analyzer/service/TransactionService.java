@@ -50,7 +50,7 @@ public class TransactionService {
 
 //    Aggregate financial totals categorized into positive / negative impacts.
 
-    public Map<String, BigDecimal> aggregate(List<Transaction> txns) {
+    public Map<String, BigDecimal> aggregateByCategory(List<Transaction> txns) {
         Map<String, BigDecimal> report = new HashMap<>();
 
         for (Transaction t : txns) {
