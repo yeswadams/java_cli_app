@@ -15,10 +15,10 @@ public record Transaction(
     public Transaction {
         Objects.requireNonNull(id, "Transaction ID cannot be null");
         if(id.isEmpty()) throw new IllegalArgumentException("Transaction ID cannot be empty");
-        Object.requireNonNull(date, "Transaction date cannot be null");
-        Object.requireNonNull(description, "Description cannot be null");
-        Object.requireNonNull(type, "Transaction type cannot be null");
-        Object.requireNonNull(category, "Category cannot be null");
+        Objects.requireNonNull(date, "Transaction date cannot be null");
+        Objects.requireNonNull(description, "Description cannot be null");
+        Objects.requireNonNull(type, "Transaction type cannot be null");
+        Objects.requireNonNull(category, "Category cannot be null");
         if(category.isBlank()) throw new IllegalArgumentException("Category cannot be blank");
         if(amount.compareTo(BigDecimal.ZERO) <= 0) throw new IllegalArgumentException("Transaction must strictly be positive: " + amount);
     }
