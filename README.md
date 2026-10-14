@@ -1,4 +1,4 @@
-# Transaction Analyzer CLI
+# Transaction Analyzer CLI App
 
 A command-line application for analyzing financial transactions from CSV files, built with Java and the standard library.
 
