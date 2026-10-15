@@ -196,6 +196,41 @@ java -jar target/transaction-analyzer.jar help
 
 ---
 
+## 🐳 Running with Docker
+
+The application provides a production-hardened, multi-stage [`Dockerfile`](Dockerfile) that compiles the application in a Maven build container and produces a minimal, secure image based on `eclipse-temurin:17-jre-alpine` running as an unprivileged non-root user.
+
+### 1. Build the Docker Image
+
+```bash
+docker build -t transaction-analyzer .
+```
+
+### 2. Run CLI Commands with Mounted Data
+
+Mount your current working directory to `/data` inside the container:
+
+```bash
+# View help
+docker run --rm transaction-analyzer
+
+# Run Financial Summary
+docker run --rm -v "${PWD}:/data" transaction-analyzer summary /data/sample_transactions.csv
+
+# Run Categorical Aggregation
+docker run --rm -v "${PWD}:/data" transaction-analyzer categories /data/sample_transactions.csv
+
+# Run Monthly Breakdown
+docker run --rm -v "${PWD}:/data" transaction-analyzer monthly /data/sample_transactions.csv
+
+# Search & Filter
+docker run --rm -v "${PWD}:/data" transaction-analyzer search /data/sample_transactions.csv --type EXPENSE --category Utilities
+```
+
+> **Tip for Linux / macOS shells**: Replace `"${PWD}"` with `"$(pwd)"`.
+
+---
+
 ## 🧪 Automated Testing Strategy
 
 The test suite contains **41 automated JUnit 5 tests** across unit, edge-case, and integration scenarios:

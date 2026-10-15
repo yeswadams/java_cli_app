@@ -1,0 +1,13 @@
+# Ignore local build output artifacts
+target/
+*.jar
+
+# Ignore IDE settings platforms
+.idea/
+*.iml
+.mvn/
+
+# Ignore local system tracking files
+.git/
+.gitignore
+
