@@ -8,10 +8,12 @@ public class CsvParseException extends Exception {
         this.lineNumber = lineNumber;
     }
 
-    public CsvParseException(String message,  int lineNumber, Throwable cause) {
+    public CsvParseException(String message, int lineNumber, Throwable cause) {
         super("Line " + lineNumber + ": " + message, cause);
         this.lineNumber = lineNumber;
     }
 
-    public int getLineNumber() { return  lineNumber; }
+    public int getLineNumber() {
+        return lineNumber;
+    }
 }

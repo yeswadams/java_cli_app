@@ -19,8 +19,8 @@ public class CsvReader {
 
     public List<Transaction> loadTransactions(Path filePath) throws IOException, CsvParseException {
         // 2. Pre-flight check
-        if (!Files.exists(filePath)) {
-            throw new IOException("Target file does not exist: " + filePath.toAbsolutePath());
+        if (filePath == null || !Files.exists(filePath)) {
+            throw new IOException("Target file does not exist: " + (filePath == null ? "null" : filePath.toAbsolutePath()));
         }
 
         List<Transaction> transactions = new ArrayList<>();
@@ -96,6 +96,6 @@ public class CsvReader {
         TransactionType type = TransactionType.valueOf(typeStr.toUpperCase()); // Throws IllegalArgumentException if unknown
         BigDecimal amount = new BigDecimal(amountStr); // Throws NumberFormatException if not a clean decimal string
 
-        return new Transaction(id, date, description, type, category, amount); // Triggers your constructor validation invariants
+        return new Transaction(id, date, description, type, category, amount); // Triggers constructor validation invariants
     }
 }

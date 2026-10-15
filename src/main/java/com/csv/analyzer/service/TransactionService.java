@@ -1,4 +1,3 @@
-// main service class
 package com.csv.analyzer.service;
 
 import com.csv.analyzer.domain.Transaction;
@@ -13,14 +12,17 @@ import java.util.stream.Collectors;
 public class TransactionService {
 
     /*
-    * Plan: SERVICE ARCHITECTURE:
-    * 1. Execute exact-decimal mathematical summations to prevent rounding errors.
-    * 2. Implement protective Optional containers for metrics that could be empty.
-    * 3. Group and sort financial data natively using pure Java Stream APIs.
-    * */
+     * SERVICE ARCHITECTURE:
+     * 1. Execute exact-decimal mathematical summations to prevent rounding errors.
+     * 2. Implement protective Optional containers for metrics that could be empty.
+     * 3. Group and sort financial data natively using pure Java Stream APIs.
+     * 4. Defensively handle null dataset references.
+     */
 
     public SummaryReport calculateSummary(List<Transaction> txns) {
-//        Use BigDecimal and enforce a scale of 2
+        if (txns == null) {
+            txns = Collections.emptyList();
+        }
 
         BigDecimal income = txns.stream()
                 .filter(t -> t.type() == TransactionType.INCOME)
@@ -34,9 +36,8 @@ public class TransactionService {
                 .reduce(BigDecimal.ZERO, BigDecimal::add)
                 .setScale(2, RoundingMode.HALF_UP);
 
-        BigDecimal net = income.subtract(expenses);
+        BigDecimal net = income.subtract(expenses).setScale(2, RoundingMode.HALF_UP);
 
-//        Optional helps us handle empty states safely
         Optional<Transaction> maxInc = txns.stream()
                 .filter(t -> t.type() == TransactionType.INCOME)
                 .max(Comparator.comparing(Transaction::amount));
@@ -45,29 +46,27 @@ public class TransactionService {
                 .filter(t -> t.type() == TransactionType.EXPENSE)
                 .max(Comparator.comparing(Transaction::amount));
 
-        return new SummaryReport(income, expenses, net, txns.size(), maxInc,maxExp);
+        return new SummaryReport(income, expenses, net, txns.size(), maxInc, maxExp);
     }
 
-//    Aggregate financial totals categorized into positive / negative impacts.
-
     public Map<String, BigDecimal> aggregateByCategory(List<Transaction> txns) {
-        Map<String, BigDecimal> report = new HashMap<>();
+        if (txns == null) {
+            return Collections.emptyMap();
+        }
 
+        Map<String, BigDecimal> report = new HashMap<>();
         for (Transaction t : txns) {
-            /* Income increases our budget pool, while expenses reduces it */
             BigDecimal modifier = t.type() == TransactionType.INCOME ? t.amount() : t.amount().negate();
-//        Check if the category key already exists if not intialize it with our modifier else combine them via BigDecimal::add
             report.merge(t.category(), modifier, BigDecimal::add);
         }
         return report;
     }
 
     public Map<YearMonth, Map<TransactionType, BigDecimal>> aggregateMonthly(List<Transaction> txns) {
-        /*
-        * We use a TreeMap instance provider here instead of a default HashMap.
-        A TreeMap automatically keeps its keys sorted in their natural sorting order.
-        This ensures our console output chronologically reads (Jan -> Feb -> Mar) without manual sorting arrays.
-        * */
+        if (txns == null) {
+            return Collections.emptyMap();
+        }
+
         return txns.stream().collect(Collectors.groupingBy(
                 t -> YearMonth.from(t.date()),
                 TreeMap::new,
@@ -78,9 +77,11 @@ public class TransactionService {
         ));
     }
 
-// Filters down datasets against flexible query constraints
-
     public List<Transaction> filterAndSort(List<Transaction> txns, TransactionType type, String category, Comparator<Transaction> sorter) {
+        if (txns == null) {
+            return Collections.emptyList();
+        }
+
         return txns.stream()
                 .filter(t -> type == null || t.type() == type)
                 .filter(t -> category == null || t.category().equalsIgnoreCase(category))

@@ -47,29 +47,29 @@ public class ConsolePrinter {
         System.out.printf("Total Expenses : %,.2f%n", report.totalExpenses());
         System.out.printf("Net Account Bal : %,.2f%n", report.netBalance());
 
-        report.largestIncome().ifPresent(t -> System.out.printf("Peak Income Record: %s (%,2f)%n", t.description(), t.amount()));
+        report.largestIncome().ifPresent(t -> System.out.printf("Peak Income Record: %s (%,.2f)%n", t.description(), t.amount()));
         report.largestExpense().ifPresent(t -> System.out.printf("Peak Expense Record: %s (%,.2f)%n", t.description(), t.amount()));
     }
 
     public void printCategories(Map<String, BigDecimal> data) {
         System.out.println("====== NET TRACKING BY CATEGORY ===========");
 
-        data.forEach((cat, amt) -> System.out.printf(" * %-15 : %,.2f%n", cat, amt));
+        data.forEach((cat, amt) -> System.out.printf(" * %-15s : %,.2f%n", cat, amt));
     }
 
 //    Renders chronological summaries
-    public void printMonthly(Map<YearMonth, Map<com.csv.analyzer.domain.TransactionType, BigDecimal>> data) {
+    public void printMonthly(Map<YearMonth, Map<TransactionType, BigDecimal>> data) {
         System.out.println("====== CHRONOLOGICAL MONTHLY LOGS ======");
         data.forEach((month, map) -> {
             BigDecimal inc = map.getOrDefault(TransactionType.INCOME, BigDecimal.ZERO);
-            BigDecimal exp = map.getOrDefault(com.csv.analyzer.domain.TransactionType.EXPENSE, BigDecimal.ZERO);
+            BigDecimal exp = map.getOrDefault(TransactionType.EXPENSE, BigDecimal.ZERO);
 
             System.out.printf(" [%s] -> Incoming: %,.2f | Spent: %,.2f%n", month, inc, exp);
         });
     }
 
     public void printTransactions(List<Transaction> list) {
-        System.out.println("======== MATCHING TRAKCED RECORDS =========");
+        System.out.println("======== MATCHING TRACKED RECORDS =========");
         if (list.isEmpty()) {
             System.out.println("No matching records found for the specified criteria.");
             return;

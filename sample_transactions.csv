@@ -1,0 +1,11 @@
+id,date,description,type,category,amount
+TXN-101,2026-01-05,"Salary, January base bonus",INCOME,Salary,85000.00
+TXN-102,2026-01-06,Office Rent Processing,EXPENSE,Housing,25000.00
+TXN-103,2026-01-15,Cloud Infrastructure,EXPENSE,Utilities,3200.50
+TXN-104,2026-01-20,Client Consulting Fee,INCOME,Consulting,15000.00
+TXN-105,2026-02-02,Team Lunch Catering,EXPENSE,Food,850.75
+TXN-106,2026-02-14,Software Licenses,EXPENSE,Utilities,1200.00
+TXN-107,2026-02-28,Performance Dividend,INCOME,Bonus,5000.00
+TXN-108,2026-03-01,Office Supplies,EXPENSE,Supplies,450.25
+TXN-109,2026-03-10,Marketing Campaign,EXPENSE,Marketing,4200.00
+TXN-110,2026-03-15,"Design Retainer, Q1",INCOME,Consulting,7500.00
