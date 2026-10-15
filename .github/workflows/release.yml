@@ -1,0 +1,44 @@
+name: Release & Publish Artifacts
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Build & Publish Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'maven'
+
+      - name: Build & Package Shaded JAR
+        run: mvn --batch-mode --no-transfer-progress clean package
+
+      - name: Generate SHA-256 Checksums
+        run: |
+          cd target
+          sha256sum transaction-analyzer.jar > transaction-analyzer.jar.sha256
+          cat transaction-analyzer.jar.sha256
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            target/transaction-analyzer.jar
+            target/transaction-analyzer.jar.sha256
+          generate_release_notes: true
+          draft: false
+          prerelease: false
